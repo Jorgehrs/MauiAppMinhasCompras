@@ -27,6 +27,6 @@ public partial class NovoProduto : ContentPage
 		} catch(Exception ex)
 		{
 			await DisplayAlert("Ops", ex.Message, "OK");
-		}
-    }
-}
+        } // Fecha try-catch
+    } // Fecha ToolbarItem_Clicked
+} // Fecha classe NovoProduto

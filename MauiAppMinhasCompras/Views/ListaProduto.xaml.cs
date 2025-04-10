@@ -19,9 +19,7 @@ public partial class ListaProduto : ContentPage
         try
         {
             lista.Clear();
-
             List<Produto> tmp = await App.Db.GetAll();
-
             tmp.ForEach(i => lista.Add(i));
         }
         catch (Exception ex)
@@ -81,7 +79,6 @@ public partial class ListaProduto : ContentPage
         try
         {
             MenuItem selecinado = sender as MenuItem;
-
             Produto p = selecinado.BindingContext as Produto;
 
             bool confirm = await DisplayAlert(
@@ -99,7 +96,8 @@ public partial class ListaProduto : ContentPage
         }
     }
 
-    private void lst_produtos_ItemSelected(object sender, SelectedItemChangedEventArgs e)
+    private void lst_produtos_ItemSelected(object sender, 
+        SelectedItemChangedEventArgs e)
     {
         try
         {
