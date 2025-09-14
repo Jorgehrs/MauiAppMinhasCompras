@@ -1,4 +1,7 @@
-﻿using MauiAppMinhasCompras.Models;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using MauiAppMinhasCompras.Models;
 using SQLite;
 
 namespace MauiAppMinhasCompras.Helpers
@@ -11,6 +14,19 @@ namespace MauiAppMinhasCompras.Helpers
         {
             _conn = new SQLiteAsyncConnection(path);
             _conn.CreateTableAsync<Produto>().Wait();
+        }
+
+        public Task<List<Produto>> GetAll()
+        {
+            return _conn.Table<Produto>().ToListAsync();
+        }
+
+        public Task<List<Produto>> Search(string filtro)
+        {
+            // Busca feita usando LIKE ignorando case, se quiser
+            return _conn.Table<Produto>()
+                        .Where(p => p.Descricao.ToLower().Contains(filtro.ToLower()))
+                        .ToListAsync();
         }
 
         public Task<int> Insert(Produto p)
@@ -26,24 +42,11 @@ namespace MauiAppMinhasCompras.Helpers
         public async Task<int> Delete(int id)
         {
             var produto = await _conn.Table<Produto>()
-                                      .Where(x => x.Id == id)
-                                      .FirstOrDefaultAsync();
+                                     .Where(x => x.Id == id)
+                                     .FirstOrDefaultAsync();
             if (produto != null)
                 return await _conn.DeleteAsync(produto);
-
             return 0;
-        }
-
-        public Task<List<Produto>> GetAll()
-        {
-            return _conn.Table<Produto>().ToListAsync();
-        }
-
-        public Task<List<Produto>> Search(string q)
-        {
-            string sql = $"SELECT * FROM Produto WHERE Descricao LIKE '%{q}%'";
-            return _conn.QueryAsync<Produto>(sql);
         }
     }
 }
-

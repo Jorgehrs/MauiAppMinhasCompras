@@ -13,25 +13,27 @@
 
     <StackLayout Padding="10">
 
-        <!-- Barra de busca -->
         <SearchBar x:Name="searchBar"
                    Placeholder="Digite para buscar"
                    TextChanged="SearchBar_TextChanged" />
 
-        <!-- Lista de produtos -->
         <ListView x:Name="lst_produtos"
                   IsPullToRefreshEnabled="True"
-                  Refreshing="lst_produtos_Refreshing"
-                  ItemSelected="lst_produtos_ItemSelected">
+                  ItemSelected="lst_produtos_ItemSelected"
+                  Refreshing="lst_produtos_Refreshing">
+
             <ListView.Header>
-                <Grid ColumnDefinitions="30, 100, 80, 50, 90" BackgroundColor="LightGray">
-                    <Label Grid.Column="0" Text="ID" Padding="5" FontAttributes="Bold" />
+                <Grid ColumnDefinitions="30, 100, 80, 50, 90"
+                      BackgroundColor="LightGray"
+                      Padding="5">
+                    <Label Grid.Column="0" Text="ID" FontAttributes="Bold" />
                     <Label Grid.Column="1" Text="Descrição" FontAttributes="Bold" />
                     <Label Grid.Column="2" Text="Preço" FontAttributes="Bold" />
                     <Label Grid.Column="3" Text="Qnt" FontAttributes="Bold" />
                     <Label Grid.Column="4" Text="Total" FontAttributes="Bold" />
                 </Grid>
             </ListView.Header>
+
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
@@ -40,7 +42,8 @@
                                       Clicked="MenuItem_Remover_Clicked"
                                       IsDestructive="True" />
                         </ViewCell.ContextActions>
-                        <Grid ColumnDefinitions="30, 100, 80, 50, 90" Padding="5">
+                        <Grid ColumnDefinitions="30, 100, 80, 50, 90"
+                              Padding="5">
                             <Label Grid.Column="0" Text="{Binding Id}" />
                             <Label Grid.Column="1" Text="{Binding Descricao}" />
                             <Label Grid.Column="2" Text="{Binding Preco, StringFormat='{}{0:C}'}" />
@@ -50,9 +53,9 @@
                     </ViewCell>
                 </DataTemplate>
             </ListView.ItemTemplate>
+
         </ListView>
 
-        <!-- Label com total geral -->
         <Label x:Name="lblTotalGeral"
                FontAttributes="Bold"
                FontSize="Medium"
@@ -60,6 +63,4 @@
                Margin="10" />
 
     </StackLayout>
-
 </ContentPage>
-

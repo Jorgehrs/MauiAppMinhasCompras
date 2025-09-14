@@ -24,17 +24,21 @@ namespace MauiAppMinhasCompras.Views
 
         private async Task CarregarProdutos(string filtro)
         {
-            // Busca no banco
-            var lista = string.IsNullOrWhiteSpace(filtro)
-                        ? await App.Db.GetAll()
-                        : await App.Db.Search(filtro);
+            try
+            {
+                var lista = string.IsNullOrWhiteSpace(filtro)
+                            ? await App.Db.GetAll()
+                            : await App.Db.Search(filtro);
 
-            // Atualiza coleção observável
-            produtosLista = new ObservableCollection<Produto>(lista);
-            lst_produtos.ItemsSource = produtosLista;
+                produtosLista = new ObservableCollection<Produto>(lista);
+                lst_produtos.ItemsSource = produtosLista;
 
-            // Atualiza total geral
-            lblTotalGeral.Text = $"Total Geral: {lista.Sum(p => p.Total):C}";
+                lblTotalGeral.Text = $"Total Geral: {lista.Sum(p => p.Total):C}";
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Ops", $"Erro ao carregar produtos: {ex.Message}", "OK");
+            }
         }
 
         private async void SearchBar_TextChanged(object sender, TextChangedEventArgs e)
@@ -50,7 +54,7 @@ namespace MauiAppMinhasCompras.Views
 
         private async void ToolbarItem_Adicionar_Clicked(object sender, EventArgs e)
         {
-            await Navigation.PushAsync(new NovoProduto());
+            await Navigation.PushAsync(new Views.NovoProduto());
         }
 
         private void lst_produtos_ItemSelected(object sender, SelectedItemChangedEventArgs e)
@@ -66,7 +70,7 @@ namespace MauiAppMinhasCompras.Views
                 return;
             }
 
-            await Navigation.PushAsync(new EditarProduto { BindingContext = produtoSelecionado });
+            await Navigation.PushAsync(new Views.EditarProduto { BindingContext = produtoSelecionado });
         }
 
         private async void ToolbarItem_Excluir_Clicked(object sender, EventArgs e)
@@ -78,12 +82,20 @@ namespace MauiAppMinhasCompras.Views
             }
 
             bool confirmar = await DisplayAlert("Confirmação",
-                $"Deseja excluir o produto '{produtoSelecionado.Descricao}'?", "Sim", "Não");
+                                               $"Deseja excluir o produto '{produtoSelecionado.Descricao}'?",
+                                               "Sim", "Não");
             if (confirmar)
             {
-                await App.Db.Delete(produtoSelecionado.Id);
-                produtoSelecionado = null;
-                await CarregarProdutos(searchBar.Text);
+                try
+                {
+                    await App.Db.Delete(produtoSelecionado.Id);
+                    produtoSelecionado = null;
+                    await CarregarProdutos(searchBar.Text);
+                }
+                catch (Exception ex)
+                {
+                    await DisplayAlert("Erro", $"Erro ao excluir produto: {ex.Message}", "OK");
+                }
             }
         }
 
@@ -92,20 +104,24 @@ namespace MauiAppMinhasCompras.Views
             var menuItem = sender as MenuItem;
             var produto = menuItem?.BindingContext as Produto;
 
+            if (produto == null)
+                return;
+
             bool confirmar = await DisplayAlert("Confirmação",
-                $"Deseja excluir o produto '{produto.Descricao}'?", "Sim", "Não");
+                                               $"Deseja excluir o produto '{produto.Descricao}'?",
+                                               "Sim", "Não");
             if (confirmar)
             {
-                await App.Db.Delete(produto.Id);
-                await CarregarProdutos(searchBar.Text);
+                try
+                {
+                    await App.Db.Delete(produto.Id);
+                    await CarregarProdutos(searchBar.Text);
+                }
+                catch (Exception ex)
+                {
+                    await DisplayAlert("Erro", $"Erro ao remover produto: {ex.Message}", "OK");
+                }
             }
-        }
-
-        private async void ToolbarItem_Somar_Clicked(object sender, EventArgs e)
-        {
-            var lista = await App.Db.GetAll();
-            double somaTotal = lista.Sum(p => p.Total);
-            await DisplayAlert("Total da Compra", $"O valor total é {somaTotal:C}", "OK");
         }
     }
 }

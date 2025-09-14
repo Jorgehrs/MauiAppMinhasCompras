@@ -1,3 +1,4 @@
+using System;
 using MauiAppMinhasCompras.Models;
 
 namespace MauiAppMinhasCompras.Views
@@ -26,7 +27,7 @@ namespace MauiAppMinhasCompras.Views
             }
             catch (Exception ex)
             {
-                await DisplayAlert("Erro", ex.Message, "OK");
+                await DisplayAlert("Erro", "Ops: " + ex.Message, "OK");
             }
         }
     }
