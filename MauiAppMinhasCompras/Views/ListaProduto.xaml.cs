@@ -54,7 +54,7 @@ namespace MauiAppMinhasCompras.Views
 
         private async void ToolbarItem_Adicionar_Clicked(object sender, EventArgs e)
         {
-            await Navigation.PushAsync(new Views.NovoProduto());
+            await Navigation.PushAsync(new NovoProduto());
         }
 
         private void lst_produtos_ItemSelected(object sender, SelectedItemChangedEventArgs e)
@@ -70,7 +70,7 @@ namespace MauiAppMinhasCompras.Views
                 return;
             }
 
-            await Navigation.PushAsync(new Views.EditarProduto { BindingContext = produtoSelecionado });
+            await Navigation.PushAsync(new EditarProduto { BindingContext = produtoSelecionado });
         }
 
         private async void ToolbarItem_Excluir_Clicked(object sender, EventArgs e)
@@ -121,6 +121,19 @@ namespace MauiAppMinhasCompras.Views
                 {
                     await DisplayAlert("Erro", $"Erro ao remover produto: {ex.Message}", "OK");
                 }
+            }
+        }
+
+        private async void ToolbarItem_Somar_Clicked(object sender, EventArgs e)
+        {
+            try
+            {
+                double total = produtosLista.Sum(p => p.Total);
+                await DisplayAlert("Total Geral", $"Soma dos produtos: {total:C}", "OK");
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Erro", $"Erro ao calcular total: {ex.Message}", "OK");
             }
         }
     }
