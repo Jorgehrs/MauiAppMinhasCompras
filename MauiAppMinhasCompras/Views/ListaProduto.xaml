@@ -11,7 +11,14 @@
         <ToolbarItem Text="Adicionar" Clicked="ToolbarItem_Adicionar_Clicked" />
     </ContentPage.ToolbarItems>
 
-    <StackLayout>
+    <StackLayout Padding="10">
+
+        <!-- Barra de busca -->
+        <SearchBar x:Name="searchBar"
+                   Placeholder="Digite para buscar"
+                   TextChanged="SearchBar_TextChanged" />
+
+        <!-- Lista de produtos -->
         <ListView x:Name="lst_produtos"
                   IsPullToRefreshEnabled="True"
                   Refreshing="lst_produtos_Refreshing"
@@ -29,7 +36,9 @@
                 <DataTemplate>
                     <ViewCell>
                         <ViewCell.ContextActions>
-                            <MenuItem Text="Remover" Clicked="MenuItem_Remover_Clicked" IsDestructive="True" />
+                            <MenuItem Text="Remover"
+                                      Clicked="MenuItem_Remover_Clicked"
+                                      IsDestructive="True" />
                         </ViewCell.ContextActions>
                         <Grid ColumnDefinitions="30, 100, 80, 50, 90" Padding="5">
                             <Label Grid.Column="0" Text="{Binding Id}" />
@@ -43,6 +52,14 @@
             </ListView.ItemTemplate>
         </ListView>
 
-        <Label x:Name="lblTotalGeral" FontAttributes="Bold" FontSize="Medium" HorizontalOptions="Center" Margin="10" />
+        <!-- Label com total geral -->
+        <Label x:Name="lblTotalGeral"
+               FontAttributes="Bold"
+               FontSize="Medium"
+               HorizontalOptions="Center"
+               Margin="10" />
+
     </StackLayout>
+
 </ContentPage>
+
